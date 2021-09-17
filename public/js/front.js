@@ -2302,14 +2302,29 @@ __webpack_require__.r(__webpack_exports__);
         _this.currentPage = response.data.results.current_page;
         _this.lastPage = response.data.results.last_page;
       })["catch"]();
-    }
-  },
-  cut: function cut(text, length) {
-    if (text > length) {
-      return text.substr(0, length) + '...';
-    }
+    },
+    cut: function cut(text, mLength) {
+      if (text.length > mLength) {
+        return text.substr(0, mLength) + '...';
+      }
 
-    return text;
+      return text;
+    },
+    prepareDate: function prepareDate(data) {
+      var Cdate = new Date(data);
+      var day = Cdate.getDate();
+      var month = Cdate.getMonth();
+
+      if (day < 10) {
+        day = '0' + day;
+      }
+
+      if (month < 10) {
+        month = '0' + month;
+      }
+
+      return day + '/' + month + '/' + Cdate.getFullYear();
+    }
   }
 });
 
@@ -38163,13 +38178,11 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
-                _vm._v(_vm._s(_vm.cut(post.description, 100)))
+                _vm._v(" " + _vm._s(_vm.cut(post.description, 80)) + " ")
               ]),
               _vm._v(" "),
               _c("p", { staticClass: "card-text" }, [
-                _vm._v(
-                  "Some quick example text to build on the card title and make up the bulk of the card's content."
-                )
+                _vm._v(_vm._s(_vm.prepareDate(post.created_at)))
               ]),
               _vm._v(" "),
               _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
@@ -38227,21 +38240,28 @@ var render = function() {
             ),
             _vm._v(" "),
             _vm._l(_vm.lastPage, function(index) {
-              return _c("li", { key: index, staticClass: "page-item" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "page-link",
-                    class: { active: _vm.currentPage == index },
-                    on: {
-                      click: function($event) {
-                        return _vm.getPosts(index)
+              return _c(
+                "li",
+                {
+                  key: index,
+                  staticClass: "page-item",
+                  class: { active: _vm.currentPage == index }
+                },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "page-link",
+                      on: {
+                        click: function($event) {
+                          return _vm.getPosts(index)
+                        }
                       }
-                    }
-                  },
-                  [_vm._v(_vm._s(index))]
-                )
-              ])
+                    },
+                    [_vm._v(_vm._s(index))]
+                  )
+                ]
+              )
             }),
             _vm._v(" "),
             _c(

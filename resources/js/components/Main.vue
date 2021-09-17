@@ -6,8 +6,8 @@
                 <div class="card bg-dark text-white mt-5" >
                     <div class="card-body">
                         <h5 class="card-title">{{post.title}}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ cut(post.description, 100) }}</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <h6 class="card-subtitle mb-2 text-muted"> {{ cut(post.description, 80) }} </h6>
+                        <p class="card-text">{{ prepareDate(post.created_at) }}</p>
                         <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a>
                     </div>
@@ -22,8 +22,8 @@
                     <span class="sr-only">Previous</span>
                     </button>
                 </li>
-                <li v-for="index in lastPage" :key="index" class="page-item">
-                    <button :class="{'active' : currentPage == index}" class="page-link" @click="getPosts(index)">{{ index }}</button>
+                <li v-for="index in lastPage" :class="{'active' : currentPage == index}" :key="index" class="page-item">
+                    <button  class="page-link" @click="getPosts(index)">{{ index }}</button>
                 </li>
                 
                 <li :class="{ 'disabled' : currentPage == lastPage }" class="page-item">
@@ -68,15 +68,28 @@ export default {
                     this.lastPage = response.data.results.last_page;
                     })
                  .catch()
-            }
-        
-        },
-        cut(text , length){
-            if(text > length){
-                return text.substr(0,length) + '...';
+            },
+        cut(text , mLength){
+            if(text.length > mLength){
+                return text.substr(0 , mLength) + '...';
             }
             return text;
-        }    
+        },    
+        prepareDate(data){
+            const Cdate = new Date(data);
+
+            let day = Cdate.getDate()
+            let month = Cdate.getMonth();
+            if(day < 10){
+                day = '0' + day;
+            }
+            if(month < 10){
+                month = '0' + month;
+            }
+            return day + '/' + month + '/' +Cdate.getFullYear();
+        }
+    }
+        
 }
 </script>
 
